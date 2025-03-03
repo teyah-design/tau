@@ -9,20 +9,14 @@ function calculateSpringTime(stiffness, damping, mass) {
 
   let settlingTime;
 
-  if (dampingRatio < 1) {
-    // Underdamped
-    settlingTime =
-      -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency);
-  } else if (dampingRatio === 1) {
-    // Critically damped
-    settlingTime = -Math.log(settlingPercentage) / naturalFrequency;
-  } else {
-    // Overdamped
-    settlingTime =
-      Math.abs(Math.log(settlingPercentage)) /
-      (dampingRatio * naturalFrequency -
-        Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
-  }
+  settlingTime =
+    dampingRatio < 1
+      ? -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency)
+      : dampingRatio === 1
+      ? -Math.log(settlingPercentage) / naturalFrequency
+      : Math.abs(Math.log(settlingPercentage)) /
+        (dampingRatio * naturalFrequency -
+          Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
 
   return Math.min(settlingTime, 1e10);
 }
@@ -213,25 +207,25 @@ export default function AnimatorScroll(props) {
         )
       : props.transition.duration;
 
+  const lineStaggerFraction = props.lineStagger / 100;
+  const wordStaggerFraction = props.wordStagger / 100;
+  const totalDuration =
+    duration * (1 + (lines.length - 1) * lineStaggerFraction);
+
+  const interpolators = {
+    fill: interpolateColor,
+    stroke: interpolateColor,
+    thicc: interpolateValue,
+    x: interpolateValue,
+    y: interpolateValue,
+    rotX: interpolateValue,
+    rotY: interpolateValue,
+    rotZ: interpolateValue,
+    scale: interpolateValue,
+    blur: interpolateValue,
+  };
+
   useEffect(() => {
-    const lineStaggerFraction = props.lineStagger / 100;
-    const wordStaggerFraction = props.wordStagger / 100;
-    const totalDuration =
-      duration * (1 + (lines.length - 1) * lineStaggerFraction);
-
-    const interpolators = {
-      fill: interpolateColor,
-      stroke: interpolateColor,
-      thicc: interpolateValue,
-      x: interpolateValue,
-      y: interpolateValue,
-      rotX: interpolateValue,
-      rotY: interpolateValue,
-      rotZ: interpolateValue,
-      scale: interpolateValue,
-      blur: interpolateValue,
-    };
-
     setCurrentState(
       lines.map((line) => line.map(() => ({ ...props[initialState] })))
     );

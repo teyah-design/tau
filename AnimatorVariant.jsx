@@ -9,20 +9,14 @@ function calculateSpringTime(stiffness, damping, mass) {
 
   let settlingTime;
 
-  if (dampingRatio < 1) {
-    // Underdamped
-    settlingTime =
-      -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency);
-  } else if (dampingRatio === 1) {
-    // Critically damped
-    settlingTime = -Math.log(settlingPercentage) / naturalFrequency;
-  } else {
-    // Overdamped
-    settlingTime =
-      Math.abs(Math.log(settlingPercentage)) /
-      (dampingRatio * naturalFrequency -
-        Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
-  }
+  settlingTime =
+    dampingRatio < 1
+      ? -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency)
+      : dampingRatio === 1
+      ? -Math.log(settlingPercentage) / naturalFrequency
+      : Math.abs(Math.log(settlingPercentage)) /
+        (dampingRatio * naturalFrequency -
+          Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
 
   return Math.min(settlingTime, 1e10);
 }
