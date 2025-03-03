@@ -9,20 +9,14 @@ function calculateSpringTime(stiffness, damping, mass) {
 
   let settlingTime;
 
-  if (dampingRatio < 1) {
-    // Underdamped
-    settlingTime =
-      -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency);
-  } else if (dampingRatio === 1) {
-    // Critically damped
-    settlingTime = -Math.log(settlingPercentage) / naturalFrequency;
-  } else {
-    // Overdamped
-    settlingTime =
-      Math.abs(Math.log(settlingPercentage)) /
-      (dampingRatio * naturalFrequency -
-        Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
-  }
+  settlingTime =
+    dampingRatio < 1
+      ? -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency)
+      : dampingRatio === 1
+      ? -Math.log(settlingPercentage) / naturalFrequency
+      : Math.abs(Math.log(settlingPercentage)) /
+        (dampingRatio * naturalFrequency -
+          Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
 
   return Math.min(settlingTime, 1e10);
 }
@@ -112,22 +106,11 @@ export default function AnimatorScroll(props) {
   const textRef = useRef(null);
   const [lines, setLines] = useState([]);
   const [currentState, setCurrentState] = useState([]);
-  const [colorScheme, setColorScheme] = useState("light");
 
   const initialState = useIsOnFramerCanvas() ? props.preview : "state1";
 
   const { scrollYProgress } = useScroll();
   const [scrollRange, setScrollRange] = useState([0, 1]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => setColorScheme(e.matches ? "dark" : "light");
-
-    handleChange(mediaQuery);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
 
   useEffect(() => {
     const elementId = props.target.replace("#", "");
@@ -224,54 +207,44 @@ export default function AnimatorScroll(props) {
         )
       : props.transition.duration;
 
-  const wordStagger = props.wordStagger / 100;
-  const lineStagger = props.lineStagger / 100;
+  const lineStaggerFraction = props.lineStagger / 100;
+  const wordStaggerFraction = props.wordStagger / 100;
+  const totalDuration =
+    duration * (1 + (lines.length - 1) * lineStaggerFraction);
+
+  const interpolators = {
+    fill: interpolateColor,
+    stroke: interpolateColor,
+    thicc: interpolateValue,
+    x: interpolateValue,
+    y: interpolateValue,
+    rotX: interpolateValue,
+    rotY: interpolateValue,
+    rotZ: interpolateValue,
+    scale: interpolateValue,
+    blur: interpolateValue,
+  };
 
   useEffect(() => {
-    const totalDuration = duration * (1 + (lines.length - 1) * lineStagger);
-    const lineAnimationTime = duration;
-
     setCurrentState(
       lines.map((line) => line.map(() => ({ ...props[initialState] })))
     );
 
-    const unsubscribe = smoothScroll.onChange((value) => {
+    const unsubscribe = smoothScroll.on("change", (value) => {
       const updatedLines = lines.map((words, lineIndex) => {
-        const lineStart = lineIndex * lineStagger * duration;
-        const lineEnd = lineStart + lineAnimationTime;
+        const lineStart = lineIndex * lineStaggerFraction * duration;
 
-        const lineFactor = Math.min(
-          Math.max((value * totalDuration - lineStart) / lineAnimationTime, 0),
-          1
-        );
-
-        return words.map((word, wordIndex) => {
-          const wordAnimationTime =
-            lineAnimationTime / (1 + (words.length - 1) * wordStagger);
+        return words.map((_, wordIndex) => {
+          const denominator = 1 + (words.length - 1) * wordStaggerFraction;
+          const wordAnimationTime = duration / denominator;
           const wordStart =
-            lineStart + wordIndex * wordStagger * wordAnimationTime;
-          const wordEnd = wordStart + wordAnimationTime;
+            lineStart + wordIndex * wordStaggerFraction * wordAnimationTime;
 
+          const elapsed = value * totalDuration - wordStart;
           const wordFactor = Math.min(
-            Math.max(
-              (value * totalDuration - wordStart) / wordAnimationTime,
-              0
-            ),
+            Math.max(elapsed / wordAnimationTime, 0),
             1
           );
-
-          const interpolators = {
-            fill: interpolateColor,
-            stroke: interpolateColor,
-            thicc: interpolateValue,
-            x: interpolateValue,
-            y: interpolateValue,
-            rotX: interpolateValue,
-            rotY: interpolateValue,
-            rotZ: interpolateValue,
-            scale: interpolateValue,
-            blur: interpolateValue,
-          };
 
           return Object.fromEntries(
             Object.keys(interpolators).map((prop) => [
@@ -285,12 +258,11 @@ export default function AnimatorScroll(props) {
           );
         });
       });
-
       setCurrentState(updatedLines);
     });
 
     return () => unsubscribe();
-  }, [smoothScroll, lines, props, colorScheme]);
+  }, [lines, props]);
 
   return (
     <div ref={textRef}>
@@ -314,10 +286,10 @@ export default function AnimatorScroll(props) {
             fontSize: props.textStyle.size,
             fontWeight: props.textStyle.font.fontWeight,
             fontStyle: props.textStyle.font.fontStyle,
-            lineHeight: lineHeight,
-            letterSpacing: letterSpacing,
+            lineHeight,
+            letterSpacing,
             textDecoration: "none",
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
           }}
         >
           {line.map((word, wordIndex) => {
@@ -352,7 +324,7 @@ export default function AnimatorScroll(props) {
   );
 }
 
-AnimatorScroll.displayName = "Tau 1.1 - Animator Scroll";
+AnimatorScroll.displayName = "Tau - Animator Scroll";
 
 addPropertyControls(AnimatorScroll, {
   text: {
@@ -725,6 +697,5 @@ addPropertyControls(AnimatorScroll, {
   transition: {
     type: ControlType.Transition,
     title: "Transition",
-    description: "Made with care and love by Teyah.",
   },
 });

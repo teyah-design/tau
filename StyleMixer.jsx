@@ -100,7 +100,7 @@ export default function StyleMixer(props) {
   );
 }
 
-StyleMixer.displayName = "Tau 1.1 - Style Mixer";
+StyleMixer.displayName = "Tau - Style Mixer";
 
 addPropertyControls(StyleMixer, {
   text: {
@@ -492,6 +492,5 @@ addPropertyControls(StyleMixer, {
     options: ["left", "center", "right"],
     optionIcons: ["text-align-left", "text-align-center", "text-align-right"],
     defaultValue: "left",
-    description: "Made with care and love by Teyah.",
   },
 });

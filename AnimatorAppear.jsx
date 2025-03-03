@@ -9,20 +9,14 @@ function calculateSpringTime(stiffness, damping, mass) {
 
   let settlingTime;
 
-  if (dampingRatio < 1) {
-    // Underdamped
-    settlingTime =
-      -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency);
-  } else if (dampingRatio === 1) {
-    // Critically damped
-    settlingTime = -Math.log(settlingPercentage) / naturalFrequency;
-  } else {
-    // Overdamped
-    settlingTime =
-      Math.abs(Math.log(settlingPercentage)) /
-      (dampingRatio * naturalFrequency -
-        Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
-  }
+  settlingTime =
+    dampingRatio < 1
+      ? -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency)
+      : dampingRatio === 1
+      ? -Math.log(settlingPercentage) / naturalFrequency
+      : Math.abs(Math.log(settlingPercentage)) /
+        (dampingRatio * naturalFrequency -
+          Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
 
   return Math.min(settlingTime, 1e10);
 }
@@ -191,10 +185,10 @@ export default function AnimatorAppear(props) {
             fontSize: props.textStyle.size,
             fontWeight: props.textStyle.font.fontWeight,
             fontStyle: props.textStyle.font.fontStyle,
-            lineHeight: lineHeight,
-            letterSpacing: letterSpacing,
+            lineHeight,
+            letterSpacing,
             textDecoration: "none",
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
           }}
         >
           {line.map((word, wordIndex) => (
@@ -229,7 +223,7 @@ export default function AnimatorAppear(props) {
   );
 }
 
-AnimatorAppear.displayName = "Tau 1.1 - Animator Appear";
+AnimatorAppear.displayName = "Tau - Animator Appear";
 
 addPropertyControls(AnimatorAppear, {
   text: {
@@ -612,6 +606,5 @@ addPropertyControls(AnimatorAppear, {
   transition: {
     type: ControlType.Transition,
     title: "Transition",
-    description: "Made with care and love by Teyah.",
   },
 });

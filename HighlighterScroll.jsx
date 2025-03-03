@@ -9,20 +9,14 @@ function calculateSpringTime(stiffness, damping, mass) {
 
   let settlingTime;
 
-  if (dampingRatio < 1) {
-    // Underdamped
-    settlingTime =
-      -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency);
-  } else if (dampingRatio === 1) {
-    // Critically damped
-    settlingTime = -Math.log(settlingPercentage) / naturalFrequency;
-  } else {
-    // Overdamped
-    settlingTime =
-      Math.abs(Math.log(settlingPercentage)) /
-      (dampingRatio * naturalFrequency -
-        Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
-  }
+  settlingTime =
+    dampingRatio < 1
+      ? -Math.log(settlingPercentage) / (dampingRatio * naturalFrequency)
+      : dampingRatio === 1
+      ? -Math.log(settlingPercentage) / naturalFrequency
+      : Math.abs(Math.log(settlingPercentage)) /
+        (dampingRatio * naturalFrequency -
+          Math.sqrt(dampingRatio * dampingRatio - 1) * naturalFrequency);
 
   return Math.min(settlingTime, 1e10);
 }
@@ -186,15 +180,13 @@ export default function HighlighterScroll(props) {
         )
       : props.transition.duration;
 
-  const lineStagger = duration * (props.lineStagger / 100);
-
   useEffect(() => {
     const totalDuration =
       duration * (1 + (textState.lines.length - 1) * (props.lineStagger / 100));
     const lineAnimationTime = duration / totalDuration;
     const staggerFactor = props.lineStagger / 100;
 
-    const unsubscribe = smoothScroll.onChange((value) => {
+    const unsubscribe = smoothScroll.on("change", (value) => {
       const updatedClips = textState.lines.map((_, lineIndex) => {
         const lineStart =
           (lineIndex * duration * staggerFactor) / totalDuration;
@@ -232,8 +224,8 @@ export default function HighlighterScroll(props) {
         fontSize: props.textStyle.size,
         fontWeight: props.textStyle.font.fontWeight,
         fontStyle: props.textStyle.font.fontStyle,
-        lineHeight: lineHeight,
-        letterSpacing: letterSpacing,
+        lineHeight,
+        letterSpacing,
       }}
     >
       <span
@@ -252,7 +244,7 @@ export default function HighlighterScroll(props) {
             textDecorationLine: props.state2.decorationLine,
             textDecorationThickness: props.state2.decorationThickness,
             textDecorationColor: props.state2.decorationColor,
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
             color: props.state2.fill,
             clipPath: textState.clips[index].twoClip,
             WebkitTextStroke: `${props.state2.thicc}px ${props.state2.stroke}`,
@@ -277,7 +269,7 @@ export default function HighlighterScroll(props) {
               textDecorationLine: props.state1.decorationLine,
               textDecorationThickness: props.state1.decorationThickness,
               textDecorationColor: props.state1.decorationColor,
-              fontVariationSettings: fontVariationSettings,
+              fontVariationSettings,
               color: props.state1.fill,
               clipPath: textState.clips[index].oneClip,
               WebkitTextStroke: `${props.state1.thicc}px ${props.state1.stroke}`,
@@ -291,7 +283,7 @@ export default function HighlighterScroll(props) {
   );
 }
 
-HighlighterScroll.displayName = "Tau 1.1 - Highlighter Scroll";
+HighlighterScroll.displayName = "Tau - Highlighter Scroll";
 
 addPropertyControls(HighlighterScroll, {
   text: {
@@ -581,6 +573,5 @@ addPropertyControls(HighlighterScroll, {
   transition: {
     type: ControlType.Transition,
     title: "Transition",
-    description: "Made with care and love by Teyah.",
   },
 });
