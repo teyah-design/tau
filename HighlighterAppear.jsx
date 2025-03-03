@@ -167,9 +167,9 @@ export default function HighlighterAppear(props) {
         fontSize: props.textStyle.size,
         fontWeight: props.textStyle.font.fontWeight,
         fontStyle: props.textStyle.font.fontStyle,
-        fontVariationSettings: fontVariationSettings,
-        lineHeight: lineHeight,
-        letterSpacing: letterSpacing,
+        fontVariationSettings,
+        lineHeight,
+        letterSpacing,
       }}
     >
       <span
@@ -237,7 +237,7 @@ export default function HighlighterAppear(props) {
   );
 }
 
-HighlighterAppear.displayName = "Tau 1.1 - Highlighter Appear";
+HighlighterAppear.displayName = "Tau - Highlighter Appear";
 
 addPropertyControls(HighlighterAppear, {
   text: {

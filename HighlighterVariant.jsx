@@ -163,9 +163,9 @@ export default function HighlighterVariant(props) {
         fontSize: props.textStyle.size,
         fontWeight: props.textStyle.font.fontWeight,
         fontStyle: props.textStyle.font.fontStyle,
-        fontVariationSettings: fontVariationSettings,
-        lineHeight: lineHeight,
-        letterSpacing: letterSpacing,
+        fontVariationSettings,
+        lineHeight,
+        letterSpacing,
       }}
     >
       <span
@@ -233,7 +233,7 @@ export default function HighlighterVariant(props) {
   );
 }
 
-HighlighterVariant.displayName = "Tau 1.1 - Highlighter Variant";
+HighlighterVariant.displayName = "Tau - Highlighter Variant";
 
 addPropertyControls(HighlighterVariant, {
   text: {

@@ -100,7 +100,7 @@ export default function StyleMixer(props) {
   );
 }
 
-StyleMixer.displayName = "Tau 1.1 - Style Mixer";
+StyleMixer.displayName = "Tau - Style Mixer";
 
 addPropertyControls(StyleMixer, {
   text: {

@@ -187,10 +187,10 @@ export default function AnimatorVariant(props) {
             fontSize: props.textStyle.size,
             fontWeight: props.textStyle.font.fontWeight,
             fontStyle: props.textStyle.font.fontStyle,
-            lineHeight: lineHeight,
-            letterSpacing: letterSpacing,
+            lineHeight,
+            letterSpacing,
             textDecoration: "none",
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
           }}
         >
           {line.map((word, wordIndex) => {
@@ -227,7 +227,7 @@ export default function AnimatorVariant(props) {
   );
 }
 
-AnimatorVariant.displayName = "Tau 1.1 - Animator Variant";
+AnimatorVariant.displayName = "Tau - Animator Variant";
 
 addPropertyControls(AnimatorVariant, {
   text: {

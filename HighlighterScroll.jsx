@@ -230,8 +230,8 @@ export default function HighlighterScroll(props) {
         fontSize: props.textStyle.size,
         fontWeight: props.textStyle.font.fontWeight,
         fontStyle: props.textStyle.font.fontStyle,
-        lineHeight: lineHeight,
-        letterSpacing: letterSpacing,
+        lineHeight,
+        letterSpacing,
       }}
     >
       <span
@@ -250,7 +250,7 @@ export default function HighlighterScroll(props) {
             textDecorationLine: props.state2.decorationLine,
             textDecorationThickness: props.state2.decorationThickness,
             textDecorationColor: props.state2.decorationColor,
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
             color: props.state2.fill,
             clipPath: textState.clips[index].twoClip,
             WebkitTextStroke: `${props.state2.thicc}px ${props.state2.stroke}`,
@@ -275,7 +275,7 @@ export default function HighlighterScroll(props) {
               textDecorationLine: props.state1.decorationLine,
               textDecorationThickness: props.state1.decorationThickness,
               textDecorationColor: props.state1.decorationColor,
-              fontVariationSettings: fontVariationSettings,
+              fontVariationSettings,
               color: props.state1.fill,
               clipPath: textState.clips[index].oneClip,
               WebkitTextStroke: `${props.state1.thicc}px ${props.state1.stroke}`,
@@ -289,7 +289,7 @@ export default function HighlighterScroll(props) {
   );
 }
 
-HighlighterScroll.displayName = "Tau 1.1 - Highlighter Scroll";
+HighlighterScroll.displayName = "Tau - Highlighter Scroll";
 
 addPropertyControls(HighlighterScroll, {
   text: {

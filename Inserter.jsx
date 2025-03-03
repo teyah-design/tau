@@ -154,7 +154,7 @@ export default function Inserter(props) {
   );
 }
 
-Inserter.displayName = "Tau 1.1 - Inserter";
+Inserter.displayName = "Tau - Inserter";
 
 addPropertyControls(Inserter, {
   text: {

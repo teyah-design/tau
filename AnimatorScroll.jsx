@@ -292,10 +292,10 @@ export default function AnimatorScroll(props) {
             fontSize: props.textStyle.size,
             fontWeight: props.textStyle.font.fontWeight,
             fontStyle: props.textStyle.font.fontStyle,
-            lineHeight: lineHeight,
-            letterSpacing: letterSpacing,
+            lineHeight,
+            letterSpacing,
             textDecoration: "none",
-            fontVariationSettings: fontVariationSettings,
+            fontVariationSettings,
           }}
         >
           {line.map((word, wordIndex) => {
@@ -330,7 +330,7 @@ export default function AnimatorScroll(props) {
   );
 }
 
-AnimatorScroll.displayName = "Tau 1.1 - Animator Scroll";
+AnimatorScroll.displayName = "Tau - Animator Scroll";
 
 addPropertyControls(AnimatorScroll, {
   text: {
