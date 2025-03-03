@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { addPropertyControls, ControlType } from "framer";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
 function calculateSpringTime(stiffness, damping, mass) {
   const settlingPercentage = 0.01;
