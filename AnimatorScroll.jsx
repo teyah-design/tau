@@ -213,47 +213,44 @@ export default function AnimatorScroll(props) {
         )
       : props.transition.duration;
 
-  const wordStagger = props.wordStagger / 100;
-  const lineStagger = props.lineStagger / 100;
-
   useEffect(() => {
-    const totalDuration = duration * (1 + (lines.length - 1) * lineStagger);
-    const lineAnimationTime = duration;
+    const lineStaggerFraction = props.lineStagger / 100;
+    const wordStaggerFraction = props.wordStagger / 100;
+    const totalDuration =
+      duration * (1 + (lines.length - 1) * lineStaggerFraction);
+
+    const interpolators = {
+      fill: interpolateColor,
+      stroke: interpolateColor,
+      thicc: interpolateValue,
+      x: interpolateValue,
+      y: interpolateValue,
+      rotX: interpolateValue,
+      rotY: interpolateValue,
+      rotZ: interpolateValue,
+      scale: interpolateValue,
+      blur: interpolateValue,
+    };
 
     setCurrentState(
       lines.map((line) => line.map(() => ({ ...props[initialState] })))
     );
 
-    const unsubscribe = smoothScroll.onChange((value) => {
+    const unsubscribe = smoothScroll.on("change", (value) => {
       const updatedLines = lines.map((words, lineIndex) => {
-        const lineStart = lineIndex * lineStagger * duration;
+        const lineStart = lineIndex * lineStaggerFraction * duration;
 
-        return words.map((word, wordIndex) => {
-          const wordAnimationTime =
-            lineAnimationTime / (1 + (words.length - 1) * wordStagger);
+        return words.map((_, wordIndex) => {
+          const denominator = 1 + (words.length - 1) * wordStaggerFraction;
+          const wordAnimationTime = duration / denominator;
           const wordStart =
-            lineStart + wordIndex * wordStagger * wordAnimationTime;
+            lineStart + wordIndex * wordStaggerFraction * wordAnimationTime;
 
+          const elapsed = value * totalDuration - wordStart;
           const wordFactor = Math.min(
-            Math.max(
-              (value * totalDuration - wordStart) / wordAnimationTime,
-              0
-            ),
+            Math.max(elapsed / wordAnimationTime, 0),
             1
           );
-
-          const interpolators = {
-            fill: interpolateColor,
-            stroke: interpolateColor,
-            thicc: interpolateValue,
-            x: interpolateValue,
-            y: interpolateValue,
-            rotX: interpolateValue,
-            rotY: interpolateValue,
-            rotZ: interpolateValue,
-            scale: interpolateValue,
-            blur: interpolateValue,
-          };
 
           return Object.fromEntries(
             Object.keys(interpolators).map((prop) => [
@@ -267,12 +264,11 @@ export default function AnimatorScroll(props) {
           );
         });
       });
-
       setCurrentState(updatedLines);
     });
 
     return () => unsubscribe();
-  }, [smoothScroll, lines, props]);
+  }, [lines, props]);
 
   return (
     <div ref={textRef}>
