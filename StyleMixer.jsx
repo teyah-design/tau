@@ -492,6 +492,5 @@ addPropertyControls(StyleMixer, {
     options: ["left", "center", "right"],
     optionIcons: ["text-align-left", "text-align-center", "text-align-right"],
     defaultValue: "left",
-    description: "Made with care and love by Teyah.",
   },
 });

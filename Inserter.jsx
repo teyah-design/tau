@@ -391,6 +391,5 @@ addPropertyControls(Inserter, {
         },
       },
     },
-    description: "Made with care and love by Teyah.",
   },
 });

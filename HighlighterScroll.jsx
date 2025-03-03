@@ -581,6 +581,5 @@ addPropertyControls(HighlighterScroll, {
   transition: {
     type: ControlType.Transition,
     title: "Transition",
-    description: "Made with care and love by Teyah.",
   },
 });
