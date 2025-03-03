@@ -112,22 +112,11 @@ export default function AnimatorScroll(props) {
   const textRef = useRef(null);
   const [lines, setLines] = useState([]);
   const [currentState, setCurrentState] = useState([]);
-  const [colorScheme, setColorScheme] = useState("light");
 
   const initialState = useIsOnFramerCanvas() ? props.preview : "state1";
 
   const { scrollYProgress } = useScroll();
   const [scrollRange, setScrollRange] = useState([0, 1]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => setColorScheme(e.matches ? "dark" : "light");
-
-    handleChange(mediaQuery);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
 
   useEffect(() => {
     const elementId = props.target.replace("#", "");
@@ -238,19 +227,12 @@ export default function AnimatorScroll(props) {
     const unsubscribe = smoothScroll.onChange((value) => {
       const updatedLines = lines.map((words, lineIndex) => {
         const lineStart = lineIndex * lineStagger * duration;
-        const lineEnd = lineStart + lineAnimationTime;
-
-        const lineFactor = Math.min(
-          Math.max((value * totalDuration - lineStart) / lineAnimationTime, 0),
-          1
-        );
 
         return words.map((word, wordIndex) => {
           const wordAnimationTime =
             lineAnimationTime / (1 + (words.length - 1) * wordStagger);
           const wordStart =
             lineStart + wordIndex * wordStagger * wordAnimationTime;
-          const wordEnd = wordStart + wordAnimationTime;
 
           const wordFactor = Math.min(
             Math.max(
@@ -290,7 +272,7 @@ export default function AnimatorScroll(props) {
     });
 
     return () => unsubscribe();
-  }, [smoothScroll, lines, props, colorScheme]);
+  }, [smoothScroll, lines, props]);
 
   return (
     <div ref={textRef}>

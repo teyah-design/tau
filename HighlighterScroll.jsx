@@ -186,8 +186,6 @@ export default function HighlighterScroll(props) {
         )
       : props.transition.duration;
 
-  const lineStagger = duration * (props.lineStagger / 100);
-
   useEffect(() => {
     const totalDuration =
       duration * (1 + (textState.lines.length - 1) * (props.lineStagger / 100));
