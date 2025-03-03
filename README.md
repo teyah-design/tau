@@ -10,4 +10,8 @@ Yes. Feel free to use Tau for any commercial or personal projects or use it in y
 
 ## Anything else?
 
-If you want to help, feel free to star the project here on GitHub, give @teyah.design a shout on social media or open a PR :)
+If you want to help, feel free to:
+
+- Star the project here on GitHub
+- Give us a shout on social media - @teyah.design
+- Contribute :)
