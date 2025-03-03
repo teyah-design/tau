@@ -192,7 +192,7 @@ export default function HighlighterScroll(props) {
     const lineAnimationTime = duration / totalDuration;
     const staggerFactor = props.lineStagger / 100;
 
-    const unsubscribe = smoothScroll.onChange((value) => {
+    const unsubscribe = smoothScroll.on("change", (value) => {
       const updatedClips = textState.lines.map((_, lineIndex) => {
         const lineStart =
           (lineIndex * duration * staggerFactor) / totalDuration;
